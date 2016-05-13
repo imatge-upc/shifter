@@ -38,7 +38,7 @@ fi
 mkdir -p musl
 tar xf "musl-${MUSL_VERSION}.tar.gz" -C musl --strip-components=1
 cd musl
-./configure "--prefix=${SPRT_PREFIX}" --enable-static --disable-shared
+CC=gcc ./configure "--prefix=${SPRT_PREFIX}" --enable-static --disable-shared
 make
 make install
 cd "${builddir}"
@@ -49,8 +49,9 @@ for dir in $dirs; do
         # SLES has symlinks for asm
         realpath=$(readlink -f "/usr/include/$dir")
         cp -rp "$realpath" "${SPRT_PREFIX}/include/"
+    else
+        cp -rp "/usr/include/$dir" "${SPRT_PREFIX}/include/"
     fi
-    cp -rp "/usr/include/$dir" "${SPRT_PREFIX}/include/"
 done
 
 cd "${builddir}"
